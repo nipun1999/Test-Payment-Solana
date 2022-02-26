@@ -1,0 +1,12 @@
+[programs.localnet]
+test_payment = "4P7wEEmpejjYFxkMk6dFJH4siA7E5KQF7SRc6fSLnai9"
+
+[registry]
+url = "https://anchor.projectserum.com"
+
+[provider]
+cluster = "localnet"
+wallet = "/Users/nipun/.config/solana/id.json"
+
+[scripts]
+test = "mocha -t 1000000 tests/"
