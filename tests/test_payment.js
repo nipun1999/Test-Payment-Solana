@@ -31,7 +31,11 @@ describe('test_payment', () => {
     let walletBalance = await connection.getBalance(
       new solanaWeb3.PublicKey(account.publicKey)
     );
-    console.log(walletBalance)
+    console.log(`account balance ${walletBalance}`)
+    walletBalance = await connection.getBalance(
+      new solanaWeb3.PublicKey(authority.publicKey)
+    );
+    console.log(`authority balance ${walletBalance}`)
 
     await program.rpc.payin({
       accounts: {
@@ -39,13 +43,22 @@ describe('test_payment', () => {
         owner: authority.publicKey,
         systemProgram: SystemProgram.programId,
       },
-      signers: [authority.Keypair]
+      signers: [authority]
     });
 
-    walletBalance = await connection.getBalance(
-      new solanaWeb3.PublicKey(account.publicKey)
-    );
-    console.log(walletBalance)
+    var delayInMilliseconds = 10000; //1 second
+
+    // adding delay to fetch updated balances
+    setTimeout(async function() {
+      walletBalance = await connection.getBalance(
+        new solanaWeb3.PublicKey(authority.publicKey)
+      );
+      console.log(`authority balance ${walletBalance}`)
+      walletBalance = await connection.getBalance(
+        new solanaWeb3.PublicKey(account.publicKey)
+      );
+      console.log(`account balance ${walletBalance}`)
+    }, delayInMilliseconds);
   });
 
 });

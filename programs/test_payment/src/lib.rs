@@ -24,12 +24,13 @@ pub mod test_payment {
 
     pub fn payin(ctx: Context<Payin>) -> ProgramResult {
         let lock_account = &mut ctx.accounts.lock_account;
+        let payer_info = &mut ctx.accounts.owner;
         let transfer_instruction = &transfer(
             &lock_account.owner,
             &lock_account.to_account_info().key,
-            10000,
+            1000000000,
         );
-        msg!("Paying in {}", 10000);
+        msg!("Paying in {}", 1000000000);
         invoke(
             transfer_instruction,
             &[
@@ -41,7 +42,6 @@ pub mod test_payment {
 }
 
 #[derive(Accounts)]
-#[instruction(bump: u8)]
 pub struct Initialize<'info> {
     #[account(init,
     payer=owner,
@@ -55,10 +55,10 @@ pub struct Initialize<'info> {
 
 #[derive(Accounts)]
 pub struct Payin<'info> {
-    #[account(mut, has_one = owner)]
+    #[account(mut)]
     pub lock_account: Account<'info, LockAccount>,
     #[account(mut)]
-    pub owner: AccountInfo<'info>,
+    pub owner: Signer<'info>,
     pub system_program: Program<'info, System>,
 }
 
